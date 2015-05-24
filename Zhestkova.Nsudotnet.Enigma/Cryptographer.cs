@@ -16,28 +16,25 @@ namespace Enigma
 
         private void SetAlgorithm(String name)
         {
+            name = name.ToLower();
             switch (name)
             {
                 case "aes":
-                case "AES":
                     {
                         _algorithm = new AesCryptoServiceProvider();
                         break;
                     }
                 case "des":
-                case "DES":
                     {
                         _algorithm = new DESCryptoServiceProvider();
                         break;
                     }
                 case "rc2":
-                case "RC2":
                     {
                         _algorithm = new RC2CryptoServiceProvider();
                         break;
                     }
                 case "rijndael":
-                case "Rijndael":
                     {
                         _algorithm = new RijndaelManaged();
                         break;

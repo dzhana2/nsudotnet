@@ -27,7 +27,7 @@ namespace Enigma
                 Environment.Exit(0);
             }
 
-            _keyword = array[0];
+            _keyword = array[0].ToLower();
 
             if (_keyword.Equals("encrypt"))
             {
