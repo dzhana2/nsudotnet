@@ -78,14 +78,14 @@ namespace LinesCounter
 
             String fileExtension;
 
-            try
-            {
-                fileExtension = args[0];
-            }
-            catch (Exception)
+            if (0 == args.Length)
             {
                 Console.WriteLine("Please, enter file extension for me");
                 fileExtension = Console.ReadLine();
+            }
+            else
+            {
+                fileExtension = args[0];
             }
 
             fileExtension = String.Format("*.{0}", fileExtension);
