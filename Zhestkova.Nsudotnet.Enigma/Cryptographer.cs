@@ -53,27 +53,26 @@ namespace Enigma
         {
             SetAlgorithm(nameAlgorithm);
 
-            switch (keyword)
+            try
             {
-                case "encrypt":
-                    {
-                        _algorithm.GenerateIV();
-                        _algorithm.GenerateKey();
-
-                        _IV = Convert.ToBase64String(_algorithm.IV);
-                        _key = Convert.ToBase64String(_algorithm.Key);
-
-                        using (var keyFile = File.Create(nameKeyFile))
+                switch (keyword)
+                {
+                    case "encrypt":
                         {
-                            using (var streamKey = new StreamWriter(keyFile))
+                            _algorithm.GenerateIV();
+                            _algorithm.GenerateKey();
+
+                            _IV = Convert.ToBase64String(_algorithm.IV);
+                            _key = Convert.ToBase64String(_algorithm.Key);
+
+                            using (var keyFile = File.Create(nameKeyFile))
                             {
-                                streamKey.WriteLine(_IV);
-                                streamKey.WriteLine(_key);
+                                using (var streamKey = new StreamWriter(keyFile))
+                                {
+                                    streamKey.WriteLine(_IV);
+                                    streamKey.WriteLine(_key);
+                                }
                             }
-                        }
-
-                        try
-                        {
                             using (var input = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
                             {
                                 using (var result = File.Create(outputFile))
@@ -84,18 +83,10 @@ namespace Enigma
                                     }
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Environment.Exit(0);
-                        }
-                        break;
+                            break;
 
-                    }
-                case "decrypt":
-                    {
-                        try
+                        }
+                    case "decrypt":
                         {
                             using (var keyFile = File.Open(nameKeyFile, FileMode.Open))
                             {
@@ -117,14 +108,14 @@ namespace Enigma
                                 }
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Environment.Exit(0);
-                        }
                         break;
-                    }
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            _algorithm.Dispose();
         }
     }
 }
