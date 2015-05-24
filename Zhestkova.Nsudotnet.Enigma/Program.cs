@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
+using System.Resources;
 
 namespace Enigma
 {
@@ -13,59 +15,69 @@ namespace Enigma
         private static String _nameAlgorithm;
         private static String _keyFile;
         private static String _keyword;
-        private const String _nameForKeyFile = "file.key.txt";
+        private const string _nameForKeyFile = "file.key.txt";
 
         private static void ParseArgument(String[] array)
         {
-
-            bool flag = false;
-
-            if (0 == array.Length)
+            using (ResourceReader reader = new ResourceReader("Message.resources"))
             {
-                Console.WriteLine("But then he must have arguments.\nPress any key...");
-                Console.Read();
-                Environment.Exit(0);
-            }
+                bool flag = false;
+                String message;
+                byte[] byteMessage;
 
-            _keyword = array[0].ToLower();
-
-            if (_keyword.Equals("encrypt"))
-            {
-                if (array.Length != 4)
+                if (0 == array.Length)
                 {
-                    Console.WriteLine("To encrypt, you must enter 3 paramters: the name of the file that are going to encrypt, encryption algorithm name (aes, des, rc2 or rijndael) and the name of the output file (*.bin).\nPress any key...");
+                    reader.GetResourceData("notArgument", out message, out byteMessage);
+                    Console.WriteLine(Encoding.ASCII.GetString(byteMessage));
+                    Console.Read();
                     Environment.Exit(0);
                 }
-                else
+
+                _keyword = array[0].ToLower();
+
+                if (_keyword.Equals("encrypt"))
                 {
-                    _originalFile = array[1];
-                    _nameAlgorithm = array[2];
-                    _binFile = array[3];
-                    _keyFile = _nameForKeyFile;
-                    flag = true;
+                    if (array.Length != 4)
+                    {
+                        reader.GetResourceData("wrongEncrypt", out message, out byteMessage);
+                        Console.WriteLine(Encoding.ASCII.GetString(byteMessage));
+                        Console.Read();
+                        Environment.Exit(0);
+                    }
+                    else
+                    {
+                        _originalFile = array[1];
+                        _nameAlgorithm = array[2];
+                        _binFile = array[3];
+                        _keyFile = _nameForKeyFile;
+                        flag = true;
+                    }
                 }
-            }
-            if (_keyword.Equals("decrypt"))
-            {
-                if (array.Length != 5)
+                if (_keyword.Equals("decrypt"))
                 {
-                    Console.WriteLine("To decrypt, you must enter the 4 parameters: the name of the file that you are going to decipher (*.bin), the name of the algorithm (aes, des, rc2 or rijndael), file name with a key (*.txt) and the name of the output file.\nPress any key...");
+                    if (array.Length != 5)
+                    {
+                        reader.GetResourceData("wrongDecrypt", out message, out byteMessage);
+                        Console.WriteLine(Encoding.ASCII.GetString(byteMessage));
+                        Console.Read();
+                        Environment.Exit(0);
+                    }
+                    else
+                    {
+                        _binFile = array[1];
+                        _nameAlgorithm = array[2];
+                        _keyFile = array[3];
+                        _originalFile = array[4];
+                        flag = true;
+                    }
+                }
+                if (!flag)
+                {
+                    reader.GetResourceData("wrongKeyword", out message, out byteMessage);
+                    Console.WriteLine(Encoding.ASCII.GetString(byteMessage));
+                    Console.Read();
                     Environment.Exit(0);
                 }
-                else
-                {
-                    _binFile = array[1];
-                    _nameAlgorithm = array[2];
-                    _keyFile = array[3];
-                    _originalFile = array[4];
-                    flag = true;
-                }
-            }
-            if (!flag)
-            {
-                Console.WriteLine("You have to say what you want: to encode or decode the information. Use keywords: encryp or decrypt.\nTo encrypt, you must enter 3 paramters: the name of the file that are going to encrypt, encryption algorithm name (aes, des, rc2 or rijndael) and the name of the output file (*.bin).\nTo decrypt, you must enter the 4 parameters: the name of the file that you are going to decipher (*.bin), the name of the algorithm (aes, des, rc2 or rijndael), file name with a key (*.txt) and the name of the output file.\nPress any key...");
-                Console.Read();
-                Environment.Exit(0);
             }
         }
 
