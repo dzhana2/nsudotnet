@@ -9,9 +9,9 @@ namespace LinesCounter
 {
     class Program
     {
-        private const String _oneLineComment = "//";
-        private const String _openComment = "/*";
-        private const String _closeComment = "*/";
+        private const string _oneLineComment = "//";
+        private const string _openComment = "/*";
+        private const string _closeComment = "*/";
 
         private static int GetAllLines(String fileName)
         {
@@ -26,6 +26,11 @@ namespace LinesCounter
             {
                 do
                 {
+                    if (-1 == file.Peek())
+                    {
+                        Console.WriteLine("File {0} suddenly unavailable. The result of calculation may be wrong.", fileName);
+                        break;
+                    }
                     str = file.ReadLine();
                     if (!String.IsNullOrEmpty(str))
                     {
