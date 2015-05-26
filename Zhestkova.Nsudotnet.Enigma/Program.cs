@@ -19,65 +19,57 @@ namespace Enigma
 
         private static void ParseArgument(String[] array)
         {
-            using (ResourceReader reader = new ResourceReader("Message.resources"))
+
+            bool flag = false;
+
+            if (0 == array.Length)
             {
-                bool flag = false;
-                String message;
-                byte[] byteMessage;
+                Console.WriteLine(Message.notArgument);
+                Console.Read();
+                Environment.Exit(0);
+            }
 
-                if (0 == array.Length)
+            _keyword = array[0].ToLower();
+
+            if (_keyword.Equals("encrypt"))
+            {
+                if (array.Length != 4)
                 {
-                    reader.GetResourceData("notArgument", out message, out byteMessage);
-                    Console.WriteLine(Encoding.ASCII.GetString(byteMessage));
+                    Console.WriteLine(Message.wrongEncrypt);
                     Console.Read();
                     Environment.Exit(0);
                 }
-
-                _keyword = array[0].ToLower();
-
-                if (_keyword.Equals("encrypt"))
+                else
                 {
-                    if (array.Length != 4)
-                    {
-                        reader.GetResourceData("wrongEncrypt", out message, out byteMessage);
-                        Console.WriteLine(Encoding.ASCII.GetString(byteMessage));
-                        Console.Read();
-                        Environment.Exit(0);
-                    }
-                    else
-                    {
-                        _originalFile = array[1];
-                        _nameAlgorithm = array[2];
-                        _binFile = array[3];
-                        _keyFile = _nameForKeyFile;
-                        flag = true;
-                    }
+                    _originalFile = array[1];
+                    _nameAlgorithm = array[2];
+                    _binFile = array[3];
+                    _keyFile = _nameForKeyFile;
+                    flag = true;
                 }
-                if (_keyword.Equals("decrypt"))
+            }
+            if (_keyword.Equals("decrypt"))
+            {
+                if (array.Length != 5)
                 {
-                    if (array.Length != 5)
-                    {
-                        reader.GetResourceData("wrongDecrypt", out message, out byteMessage);
-                        Console.WriteLine(Encoding.ASCII.GetString(byteMessage));
-                        Console.Read();
-                        Environment.Exit(0);
-                    }
-                    else
-                    {
-                        _binFile = array[1];
-                        _nameAlgorithm = array[2];
-                        _keyFile = array[3];
-                        _originalFile = array[4];
-                        flag = true;
-                    }
-                }
-                if (!flag)
-                {
-                    reader.GetResourceData("wrongKeyword", out message, out byteMessage);
-                    Console.WriteLine(Encoding.ASCII.GetString(byteMessage));
+                    Console.WriteLine(Message.wrongDecrypt);
                     Console.Read();
                     Environment.Exit(0);
                 }
+                else
+                {
+                    _binFile = array[1];
+                    _nameAlgorithm = array[2];
+                    _keyFile = array[3];
+                    _originalFile = array[4];
+                    flag = true;
+                }
+            }
+            if (!flag)
+            {
+                Console.WriteLine(Message.wrongKeyword);
+                Console.Read();
+                Environment.Exit(0);
             }
         }
 
