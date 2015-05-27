@@ -27,11 +27,6 @@ namespace LinesCounter
             {
                 while (!file.EndOfStream)
                 {
-                    if (!File.Exists(fileName))
-                    {
-                        Console.WriteLine("File {0} suddenly unavailable. The result of calculation may be wrong.", fileName);
-                        break;
-                    }
                     str = file.ReadLine();
                     if (!String.IsNullOrEmpty(str))
                     {
