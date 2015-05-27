@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace LinesCounter
 {
@@ -24,9 +25,9 @@ namespace LinesCounter
 
             using (var file = new StreamReader(fileName))
             {
-                do
+                while (!file.EndOfStream)
                 {
-                    if (-1 == file.Peek())
+                    if (!File.Exists(fileName))
                     {
                         Console.WriteLine("File {0} suddenly unavailable. The result of calculation may be wrong.", fileName);
                         break;
@@ -71,7 +72,7 @@ namespace LinesCounter
                         }
                     }
                 }
-                while (str != null);
+
             }
 
             return result;
